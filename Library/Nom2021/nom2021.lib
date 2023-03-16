@@ -1,0 +1,261 @@
+*   NOM2021    
+*     The following is a summary of specific transistor parts in these libraries:
+*   Part name       Part type      
+*   DSIL
+*   DIdeal
+*   BJTMod1         NPN hfe=100
+*   Q2N4401         NPN BJT                  
+*   Q2N4403                   PNP BJT             
+*   Q2N3904              NPN BJT             
+*   Q2N3906                   PNP BJT            
+*   BJTSSLM         hie=1k, hfe=100
+*   BJTHFLM         rbb'=50, rb'e=hie=1k, hfe=100, cb'e=50pf, cb'c=5pf
+*   BJTLSLM         hie=1k, hfe=100, Vo=0.7
+*   OpAmp1          Aol=10000
+*   OpAmp2          Aol=10000, power supply limiting
+
+*   J2N3819              N-channel JFET                           
+* FETMOD1           NJF(VTO=-5V BETA=4E-4); (Vp=-5V, Idss=10mA)
+* FETMOD2           NJF(VTO=-4V BETA=6.25E-4);(Vp=-4V, Idss=10mA)
+* J2N3819           NJF(Beta=1.304m Betatce=-.5 Rd=1 Rs=1 Lambda=2.25m Vto=-3
+* FETSSLM           Gm=1mS 
+* FETLSLM           IDSS=10MA, VP=-5V
+* FETHFLM      Gm=1mS,Cgs=10PF, Cgd=5PF
+* IRF150            NMOS
+* INV               CMOS
+* NMOSMOD1          VT=1V AND ID2T=5MA
+* PMOSMOD1          VT=-1V AND ID2T=5MA
+*
+* PSpice Model Editor - Version 9.2
+*
+****************************************************************** 
+*
+*$
+.MODEL DSIL D
+*
+***********************************************************
+*
+*
+*$
+.model DIdeal D Is=1e-14 Cjo=.1pF Rs=.1 N=0.01
+*$
+****************************************************************** 
+* BJT SEMICONDUCTOR  MODEL WITH AN HFE=100
+*
+.MODEL BJTMOD1 NPN
+*
+*******************************************************
+*
+*$
+.model Q2N4401 NPN(Is=26.03f Xti=3 Eg=1.11 Vaf=90.7 Bf=429.2 Ne=1.244
++         Ise=26.03f Ikf=.2061 Xtb=1.5 Br=1.01 Nc=2 Isc=0 Ikr=0 Rc=.5
++         Cjc=11.01p Mjc=.3763 Vjc=.75 Fc=.5 Cje=24.07p Mje=.3641 Vje=.75
++         Tr=233.7n Tf=466.5p Itf=0 Vtf=0 Xtf=0 Rb=10)
+*         Motorola  pid=2N4400     case=TO92
+*         88-09-13 bam   creation
+*$
+**********************************************************
+*
+.model Q2N4403 PNP(Is=650.6E-18 Xti=3 Eg=1.11 Vaf=115.7 Bf=216.2 Ne=1.829
++         Ise=58.72f Ikf=1.079 Xtb=1.5 Br=3.578 Nc=2 Isc=0 Ikr=0 Rc=.715
++         Cjc=14.76p Mjc=.5383 Vjc=.75 Fc=.5 Cje=19.82p Mje=.3357 Vje=.75
++         Tr=111.6n Tf=603.7p Itf=.65 Vtf=5 Xtf=1.7 Rb=10)
+*         National  pid=63         case=TO92
+*         88-09-09 bam   creation
+*$
+*******************************************************************
+.model Q2N3904 NPN(Is=6.734f Xti=3 Eg=1.11 Vaf=74.03 Bf=416.4 Ne=1.259
++         Ise=6.734f Ikf=66.78m Xtb=1.5 Br=.7371 Nc=2 Isc=0 Ikr=0 Rc=1
++         Cjc=3.638p Mjc=.3085 Vjc=.75 Fc=.5 Cje=4.493p Mje=.2593 Vje=.75
++         Tr=239.5n Tf=301.2p Itf=.4 Vtf=4 Xtf=2 Rb=10)
+*         National  pid=23         case=TO92
+*         88-09-08 bam   creation
+*$
+**********************************************************
+*
+.model Q2N3906 PNP(Is=1.41f Xti=3 Eg=1.11 Vaf=18.7 Bf=180.7 Ne=1.5 Ise=0
++         Ikf=80m Xtb=1.5 Br=4.977 Nc=2 Isc=0 Ikr=0 Rc=2.5 Cjc=9.728p
++         Mjc=.5776 Vjc=.75 Fc=.5 Cje=8.063p Mje=.3677 Vje=.75 Tr=33.42n
++         Tf=179.3p Itf=.4 Vtf=4 Xtf=6 Rb=10)
+                                                       *         National  pid=66         case=TO92           
+*         88-09-09 bam   creation
+*$
+**********************************************************
+*
+* BJT SMALL SIGNAL LINEAR MODEL
+*
+*                         C     B   E
+*                                    !      !     !
+.SUBCKT BJTSSLM   C    B   E
+RHIE   B 101 1K ; HIE=1KOHM
+VO 101   E   0.0
+F1   C    E   VO 100 ; HFE=100
+.ENDS
+*$
+**********************************************************
+*
+* BJT HIGH FREQUENCY LINEAR MODEL
+*
+*                 C    B   E
+*                 !    !   !
+.SUBCKT BJTHFLM   C    B   E
+RBBP   B    BP  50
+RHIE   BP   XX  1K  ; HIE=1KOHM
+CBPE   BP   E   50PF
+CBPC   BP   C   5PF
+VO     XX   E   0.0
+F1     C    E   VO  100 ; HFE=100
+.ENDS
+*$
+
+****************************************************************** 
+*
+* BJT LARGE SIGNAL LINEAR MODEL
+*
+*                         C     B   E
+*                                    !      !     !
+.SUBCKT BJTLSLM   C    B   E
+RHIE   B 101 1K ; HIE=1KOHM
+VO 101   E   0.7
+F1   C    E   VO 100 ; HFE=100
+.ENDS
+*$
+*
+****************************************************************** 
+*
+.SUBCKT OPAMP1 100 101 102
+R1 100 0 100MEG
+R2 101 0 100MEG
+EOUT 102 0 100 101 1E4
+.ENDS
+*$
+*
+**********************************************************
+*
+* OP AMP WITH OUTPUT VOLTAGE LIMITING
+*
+*              V1  V2  VO  +VCC -VEE
+*
+.SUBCKT OPAMP2 100 101 105  103  104
+R1 100 0 100MEG
+R2 101 0 100MEG
+EOUT 102 0 100 101 1E4
+ROUT 102 105 50
+D1 105 103 DX
+D2 104 105 DX
+.MODEL DX D(N=0.001)
+.ENDS
+**********************************************************
+
+                                                                            ELEC-408, ELEC-306       * PSpice Version 9.2
+Library  NOM04.LIB               7/25/06
+
+********************************************************
+*  
+* FET N-CHANNEL SEMICONDUCTOR MODEL WITH VP=-5V AND IDSS=10MA
+*
+*$
+.MODEL FETMOD1 NJF(VTO=-5V BETA=4E-4); BETA=IDSS/(VP**2)
+*
+**********************************************************
+*  
+* FET N-CHANNEL SEMICONDUCTOR MODEL WITH VP=-4V AND IDSS=10MA
+*
+*$
+.MODEL FETMOD2 NJF(VTO=-4V BETA=6.25E-4); BETA=IDSS/(VP**2)
+*
+**********************************************************
+*
+*$
+.model J2N3819 NJF(Beta=1.304m Betatce=-.5 Rd=1 Rs=1 Lambda=2.25m Vto=-3
++         Vtotc=-2.5m Is=33.57f Cgd=1.6p Pb=1 Fc=.5 Cgs=2.414p 
++               Kf=9.882E-18 Af=1)
+*         National  pid=50         case=TO92
+*         88-08-01 rmn   BVmin=25
+
+*$
+*******************************************************
+*
+* FET SMALL SIGNAL LINEAR MODEL
+*
+*                D   G   S
+*                !   !   !
+.SUBCKT FETSSLM  D   G   S
+RGG G   S 100MEG
+G1  D   S  G  S 1MS; LAST # IS SMALL SIGNAL GM = 
+.ENDS                 ;           (-2IDSS/VP)(1-VGS/VP)
+*$
+****************************************************************** 
+* FET LARGE SIGNAL LINEAR MODEL
+*
+*                D   G   S
+*                !   !   !
+.SUBCKT FETLSLM  D   G   S
+RGG G   S 100MEG
+IX  D   S   6.667MA; IDSS=10MA, IX=2/3 IDSS
+G1 D   S   G   S  1.333MS ; LAST # IS GM = -2IDSS/3VP 
+.ENDS                      ;                WITH VP=-5V
+*$
+**********************************************************
+*******************************************************
+*
+* FET HIGH FREQUENCY LINEAR MODEL
+*
+*                D   G   S
+*                !   !   !
+.SUBCKT FETHFLM  D   G   S
+RGG G   S 100MEG
+CGS G   S 10PF
+CGD D   S 5PF
+G1  D   S  G  S 1MS; LAST # IS SMALL SIGNAL GM = 
+.ENDS                 ;           (-2IDSS/VP)(1-VGS/VP)
+*$
+
+
+
+**********************************************************
+*-------------------------------------------------------------------------------
+* Library of MOSFET model parameters (for "power" MOSFET devices)
+* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+*
+.model IRF150  NMOS(Level=3 Gamma=0 Delta=0 Eta=0 Theta=0 Kappa=0 Vmax=0 Xj=0
++         Tox=100n Uo=600 Phi=.6 Rs=1.624m Kp=20.53u W=.3 L=2u Vto=2.831
++            Rd=1.031m Rds=444.4K Cbd=3.229n Pb=.8 Mj=.5 Fc=.5 Cgso=9.027n
++         Cgdo=1.679n Rg=13.89 Is=194E-18 N=1 Tt=288n)
+*         Int'l Rectifier     pid=IRFC150    case=TO3
+*         88-08-25 bam   creation
+
+*-------------------------------------------------------------------------------
+**********************************************************
+*
+* INVERTER SUBCIRCUIT
+*
+*          IN OUT VCC
+*           !  !   !
+*$
+.SUBCKT INV 1  2   3 
+M1 2 1 0 0 NMOSMOD1                
+M2 2 1 3 3 PMOSMOD1
+.ENDS
+*$
+*
+**********************************************************
+*
+* N-CHANNEL ENHANCEMENT MOSFET SEMICONDUCTOR MODEL WITH 
+*     VT=1V AND ID2T=5MA
+*
+.MODEL NMOSMOD1 NMOS(VTO=1V KP=1E-2); KP=(L/W)*(2*ID2T/VT**2)
+*
+* DEFAULT L = DEFAULT W = 100UM
+*
+***********************************************************
+*
+* P-CHANNEL ENHANCEMENT MOSFET SEMICONDUCTOR MODEL WITH 
+*     VT=-1V AND ID2T=5MA
+*$
+.MODEL PMOSMOD1 PMOS(VTO=-1V KP=1E-2); KP=(L/W)*(2*ID2T/VT**2)
+*
+* DEFAULT L = DEFAULT W = 100UM
+*
+**********************************************************
+*$

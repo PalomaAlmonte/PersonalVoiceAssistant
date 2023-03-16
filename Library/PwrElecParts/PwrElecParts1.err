@@ -1,0 +1,8 @@
+STATUS: PSpice Schematics to Capture translator (9.2. 226)
+STATUS:  
+STATUS: Translator started at Tuesday, July 14, 2020 18:13:32
+STATUS: C:\Program Files\OrcadLite\Capture\sch2cap -f "G:\My Documents\PwrElecParts\PwrElecParts1.Lib" -o "G:\My Documents\PwrElecParts\PwrElecParts1.olb" -i C:\Program Files\OrcadLite\PSpice\PSpice.ini
+   INFO: Using existing library 'C:\Program Files\OrcadLite\Capture\Library\PSpice\modeled.etc'.
+   INFO: Created new library 'G:\My Documents\PwrElecParts\PwrElecParts1.olb'.
+STATUS: Translator stopped at Tuesday, July 14, 2020 18:13:34
+STATUS: 0 Error messages, 0 Warning messages

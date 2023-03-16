@@ -1,0 +1,76 @@
+* source Buck_AVG
+*$
+.SUBCKT Buck_AVG com CP1 Din VP1  
+E_Eout         CP1 COM N00017 0 1
+G_ABMI2         VP1 COM VALUE { -V(Din,0)*I(E_Eout)    }
+E_ABM1         N00017 0 VALUE { V(Din,0) * V(VP1, com)    }
+.ENDS
+*$
+*
+* source Boost_AVG
+.SUBCKT Boost_AVG COM CP1 Din VP1 
+E_Eout         VP1 COM N00017 0 1
+G_ABMI2         CP1 COM VALUE { -(1-V(Din))*I(E_Eout)    }
+E_ABM1         N00017 0 VALUE { (1-V(Din,0))*V(CP1,COM)    }
+.ENDS
+*$
+*
+* source PWM_SAW
+.SUBCKT PWM_SAW c s  
+E_ABM21         s 0 VALUE { IF(V(c)-V(N00011)>0, 1, 0)    }
+V_V1         N00011 0  
++PULSE 0 1 0 9.98us 0.01u 0.01us (10us)
+.ENDS
+*
+*$
+* source AVG_2PORT
+.SUBCKT AVG_2PORT com CP1 Ncp VP1  
+E_Eout         CP1 COM N00017 0 1
+G_ABMI2         VP1 COM VALUE { -V(Ncp,0)*I(E_Eout)    }
+E_ABM1         N00017 0 VALUE { V(Ncp,0) * V(VP1, com)    }
+.ENDS
+*$
+*
+* source CCM_AVG_2PORT
+.SUBCKT CCM_AVG_2PORT common CP1 Ncp VP1  
+E_Eout         CP1 COMMON N00017 0 1
+G_ABMI2         VP1 COMMON VALUE { -V(Ncp)*I(E_Eout)    }
+E_ABM1         N00017 0 VALUE { V(Ncp,0)*V(VP1,common)    }
+.ENDS
+*$
+*
+*$
+*
+
+*$
+* source PWM_SIG
+.SUBCKT PWM_SIG s1_2 s2_3 v_control  
+E_SUM2         N00053 0 VALUE {V(V_CONTROL)+V(N00045)}
+E_SUM1         N00049 0 VALUE {V(V_CONTROL)+V(N00031)}
+V_V1         N00061 0  
++PULSE 0 0.5 0 9.98us 0us 0.1us 10us
+V_V2         N00031 0  
++PULSE -2 0 0 0 0 10us 20us
+V_V3         N00045 0  
++PULSE -2 0 0 0 0 10us 20us
+E_E1         s1_2 0 TABLE { V(N00049, N00061) } 
++ ( (-1,-1)(-0.005,-1)(0,0)(0.005,1)(1,1) )
+E_E2         s2_3 0 TABLE { V(N00053, N00061) } 
++ ( (-1,-1)(-0.005,-1)(0,0)(0.005,1)(1,1) )
+.ENDS
+*
+* source PWM_TRI
+.SUBCKT PWM_TRI c s  
+E_ABM21         s 0 VALUE { If(V(c)-V(N00015)>0,1,0)    }
+V_V1         N00015 0  
++PULSE -1 1 0 9.98us 0.01us .01u 10us
+.ENDS
+*
+*
+* Voltage Controlled Switch MODEL
+*        
+.SUBCKT VSW1   VIN S1 S2
+SW1 S1 S2 VIN 0 SX1
+.MODEL SX1 VSWITCH(Ron=0.0001m Roff=1MEG Von=1V Voff=0V)
+.ENDS
+*$
